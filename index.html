@@ -274,16 +274,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--glass-border);padd
     </div>
     <div class="form-wrap reveal reveal-d1">
       <div class="f-row">
-        <div class="f-field"><label>Your Name</label><input type="text" placeholder="Rajesh Kumar"/></div>
-        <div class="f-field"><label>Phone</label><input type="tel" placeholder="+91 98765 43210"/></div>
+        <div class="f-field"><label>Your Name</label><input type="text" name="name" placeholder="Rajesh Kumar"/></div>
+        <div class="f-field"><label>Phone</label><input type="tel" name="phone" placeholder="+91 98765 43210"/></div>
       </div>
-      <div class="f-field"><label>Email Address</label><input type="email" placeholder="principal@yourschool.edu.in"/></div>
-      <div class="f-field"><label>School Name</label><input type="text" placeholder="St. Mary's High School"/></div>
+      <div class="f-field"><label>Email Address</label><input type="email" name="email" placeholder="principal@yourschool.edu.in"/></div>
+      <div class="f-field"><label>School Name</label><input type="text" name="school" placeholder="St. Mary's High School"/></div>
       <div class="f-row">
-        <div class="f-field"><label>City / District</label><input type="text" placeholder="Kolkata"/></div>
-        <div class="f-field"><label>Interested In</label><select><option value="">Select...</option><option>AI Robotics Lab</option><option>Workshops</option><option>Innovation Camp</option><option>Student STEM Kits</option><option>Full Program</option></select></div>
+        <div class="f-field"><label>City / District</label><input type="text" name="city" placeholder="Kolkata"/></div>
+        <div class="f-field"><label>Interested In</label><select name="interest"><option value="">Select...</option><option>AI Robotics Lab</option><option>Workshops</option><option>Innovation Camp</option><option>Student STEM Kits</option><option>Full Program</option></select></div>
       </div>
-      <div class="f-field"><label>Message (Optional)</label><textarea placeholder="Tell us about your school's requirement..."></textarea></div>
+      <div class="f-field"><label>Message (Optional)</label><textarea name="message" placeholder="Tell us about your school's requirement..."></textarea></div>
       <form action="https://formspree.io/f/mdawkrgn" method="POST">
 <button type="submit" class="btn-p" style="width:100%;justify-content:center;border:none;font-size:0.9rem">Send Inquiry &rarr;</button>
 </form>
