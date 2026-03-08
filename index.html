@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>India Elevate — Empowering Bharat Through Education</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05080f;
+  --bg2:#080d16;
+  --glass:rgba(255,255,255,0.032);
+  --glass-border:rgba(255,255,255,0.07);
+  --saffron:#ff6b00;
+  --saffron2:#ff8c38;
+  --saffron-glow:rgba(255,107,0,0.15);
+  --saffron-ultra:rgba(255,107,0,0.06);
+  --green:#00c98d;
+  --white:#eef2f7;
+  --muted:rgba(238,242,247,0.42);
+  --muted2:rgba(238,242,247,0.22);
+  --font-d:'Cormorant Garamond',serif;
+  --font-b:'Outfit',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:var(--font-b);font-weight:300;overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+#cursor{position:fixed;width:10px;height:10px;background:var(--saffron);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width 0.25s,height 0.25s}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(255,107,0,0.5);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left 0.18s ease,top 0.18s ease,width 0.3s,height 0.3s}
+
+/* CANVAS */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:0.4}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:1.5rem 5%;transition:background 0.4s,backdrop-filter 0.4s,border-color 0.4s}
+nav.scrolled{background:rgba(5,8,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border)}
+.nav-logo{font-family:var(--font-d);font-size:1.6rem;font-weight:700;color:var(--white);text-decoration:none}
+.nav-logo em{color:var(--saffron);font-style:italic}
+.nav-links{display:flex;align-items:center;gap:2.8rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.82rem;letter-spacing:0.08em;font-weight:400;transition:color 0.2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--saffron);transform:scaleX(0);transform-origin:left;transition:transform 0.3s}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{color:var(--saffron)!important;border:1px solid rgba(255,107,0,0.4);padding:0.5rem 1.3rem;border-radius:4px;font-weight:500!important;transition:background 0.25s,border-color 0.25s!important}
+.nav-cta:hover{background:var(--saffron-glow);border-color:var(--saffron)!important}
+.nav-cta::after{display:none!important}
+
+/* HERO */
+.hero{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 5% 5rem;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 55%,transparent 0%,var(--bg) 100%);z-index:0;pointer-events:none}
+.hero-inner{position:relative;z-index:1}
+.hero-pill{display:inline-flex;align-items:center;gap:0.6rem;background:rgba(255,107,0,0.08);border:1px solid rgba(255,107,0,0.25);color:var(--saffron);font-size:0.72rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;padding:0.45rem 1.1rem;border-radius:100px;margin-bottom:2.4rem;opacity:0;animation:riseIn 0.8s 0.2s ease forwards}
+.pill-dot{width:6px;height:6px;background:var(--saffron);border-radius:50%;animation:blink 2s ease-in-out infinite}
+.hero-title{font-family:var(--font-d);font-size:clamp(3.2rem,8vw,7rem);font-weight:600;line-height:1.02;letter-spacing:-0.01em;opacity:0;animation:riseIn 0.9s 0.35s ease forwards}
+.hero-title .line2{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--saffron),var(--saffron2),#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{margin-top:1.8rem;font-size:1.05rem;color:var(--muted);max-width:500px;margin-left:auto;margin-right:auto;line-height:1.75;font-weight:300;opacity:0;animation:riseIn 0.9s 0.5s ease forwards}
+.hero-actions{display:flex;gap:1.2rem;margin-top:3rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:riseIn 0.9s 0.65s ease forwards}
+.btn-p{position:relative;overflow:hidden;background:var(--saffron);color:#000;font-family:var(--font-b);font-weight:600;font-size:0.88rem;letter-spacing:0.04em;padding:1rem 2.2rem;border-radius:5px;border:none;cursor:none;text-decoration:none;display:inline-flex;align-items:center;gap:0.6rem;transition:transform 0.25s,box-shadow 0.25s;box-shadow:0 0 40px rgba(255,107,0,0.25),0 2px 10px rgba(255,107,0,0.3)}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 0 60px rgba(255,107,0,0.4),0 8px 24px rgba(255,107,0,0.25)}
+.btn-s{background:transparent;color:var(--white);font-family:var(--font-b);font-size:0.88rem;font-weight:400;letter-spacing:0.04em;padding:1rem 2.2rem;border-radius:5px;border:1px solid var(--glass-border);cursor:none;text-decoration:none;display:inline-flex;align-items:center;gap:0.6rem;transition:border-color 0.25s,background 0.25s}
+.btn-s:hover{border-color:rgba(255,255,255,0.18);background:var(--glass)}
+.scroll-ind{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.6rem;opacity:0;animation:riseIn 1s 1.2s ease forwards}
+.scroll-ind span{font-size:0.65rem;letter-spacing:0.2em;color:var(--muted2);text-transform:uppercase}
+.scroll-track{width:1px;height:50px;background:linear-gradient(to bottom,var(--saffron),transparent);position:relative;overflow:hidden}
+.scroll-track::after{content:'';position:absolute;top:-100%;left:0;width:1px;height:100%;background:white;animation:drip 2s ease-in-out infinite 1.5s}
+
+/* MARQUEE */
+.marquee-wrap{position:relative;z-index:2;border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);background:rgba(255,107,0,0.04);padding:0.9rem 0;overflow:hidden}
+.marquee-track{display:flex;gap:0;animation:marquee 28s linear infinite;width:max-content}
+.marquee-item{font-family:var(--font-d);font-size:0.85rem;font-weight:600;letter-spacing:0.12em;color:var(--muted2);padding:0 3rem;white-space:nowrap;display:flex;align-items:center;gap:1rem}
+.marquee-item .sep{color:var(--saffron);font-size:1.1rem}
+
+/* SECTIONS */
+.section{position:relative;z-index:2;padding:8rem 5%}
+.section-alt{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 50%,var(--bg) 100%)}
+.s-tag{display:inline-flex;align-items:center;gap:0.6rem;color:var(--saffron);font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1.2rem}
+.s-tag::before{content:'';width:24px;height:1px;background:var(--saffron)}
+.s-title{font-family:var(--font-d);font-size:clamp(2.2rem,4vw,3.6rem);font-weight:600;line-height:1.08;letter-spacing:-0.01em;max-width:560px}
+.s-title em{font-style:italic;color:var(--saffron)}
+.s-sub{margin-top:1rem;color:var(--muted);font-size:0.95rem;max-width:480px;line-height:1.75;font-weight:300}
+
+/* OFFER GRID */
+.offer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:4.5rem;background:var(--glass-border);border:1px solid var(--glass-border);border-radius:16px;overflow:hidden}
+.o-card{background:rgba(8,13,22,0.9);padding:2.8rem 2.2rem;position:relative;overflow:hidden;transition:background 0.35s}
+.o-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--saffron),transparent);transform:scaleX(0);transition:transform 0.5s}
+.o-card:hover{background:rgba(12,19,34,0.95)}
+.o-card:hover::before{transform:scaleX(1)}
+.o-card-glow{position:absolute;width:200px;height:200px;border-radius:50%;background:var(--saffron-ultra);top:-60px;right:-60px;transition:opacity 0.35s;opacity:0;pointer-events:none}
+.o-card:hover .o-card-glow{opacity:1}
+.o-icon{font-size:1.8rem;margin-bottom:1.6rem;display:block}
+.o-title{font-family:var(--font-d);font-size:1.3rem;font-weight:600;margin-bottom:0.7rem;letter-spacing:0.01em}
+.o-desc{color:var(--muted);font-size:0.87rem;line-height:1.7}
+
+/* CURRICULUM */
+.curr-wrap{margin-top:4.5rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
+.curr-card{border:1px solid var(--glass-border);border-radius:14px;background:var(--glass);backdrop-filter:blur(12px);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s}
+.curr-card:hover{border-color:rgba(255,107,0,0.3);transform:translateY(-4px)}
+.curr-card-accent{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--saffron),transparent);opacity:0;transition:opacity 0.35s}
+.curr-card:hover .curr-card-accent{opacity:1}
+.curr-num{font-family:var(--font-d);font-size:4rem;font-weight:700;color:rgba(255,107,0,0.08);line-height:1;position:absolute;top:1rem;right:1.5rem;transition:color 0.3s}
+.curr-card:hover .curr-num{color:rgba(255,107,0,0.15)}
+.curr-level{font-size:0.65rem;font-weight:600;letter-spacing:0.2em;color:var(--saffron);text-transform:uppercase;margin-bottom:0.3rem}
+.curr-class{font-family:var(--font-d);font-size:1.6rem;font-weight:600;margin-bottom:1.4rem}
+.curr-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.6rem}
+.c-tag{font-size:0.68rem;font-weight:500;letter-spacing:0.06em;padding:0.3rem 0.7rem;border-radius:3px}
+.c-tag-o{background:rgba(255,107,0,0.1);color:var(--saffron);border:1px solid rgba(255,107,0,0.2)}
+.c-tag-g{background:rgba(0,201,141,0.1);color:var(--green);border:1px solid rgba(0,201,141,0.2)}
+.curr-list{list-style:none}
+.curr-list li{font-size:0.84rem;color:var(--muted);padding:0.6rem 0;border-bottom:1px solid var(--glass-border);display:flex;align-items:flex-start;gap:0.7rem;line-height:1.5}
+.curr-list li:last-child{border-bottom:none}
+.curr-list li::before{content:'';width:4px;height:4px;background:var(--saffron);border-radius:50%;margin-top:0.45rem;flex-shrink:0}
+
+/* PROCESS */
+.process-wrap{margin-top:5rem;display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}
+.process-wrap::before{content:'';position:absolute;top:26px;left:calc(10% + 13px);right:calc(10% + 13px);height:1px;background:linear-gradient(90deg,var(--saffron),rgba(255,107,0,0.2));z-index:0}
+.p-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 1rem;position:relative;z-index:1}
+.p-node{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,107,0,0.4);background:var(--bg);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:1rem;font-weight:700;color:var(--saffron);margin-bottom:1.5rem;position:relative;transition:border-color 0.3s,background 0.3s}
+.p-node::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid rgba(255,107,0,0.1);transition:inset 0.3s,border-color 0.3s}
+.p-step:hover .p-node{background:var(--saffron-glow);border-color:var(--saffron)}
+.p-step:hover .p-node::after{inset:-10px;border-color:rgba(255,107,0,0.15)}
+.p-title{font-family:var(--font-d);font-size:1.05rem;font-weight:600;margin-bottom:0.4rem}
+.p-desc{color:var(--muted);font-size:0.8rem;line-height:1.6}
+
+/* CONTACT */
+.contact-wrap{display:grid;grid-template-columns:1fr 1.3fr;gap:8rem;align-items:start}
+.contact-lhs h3{font-family:var(--font-d);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:600;line-height:1.12;margin-bottom:1rem}
+.contact-lhs h3 em{font-style:italic;color:var(--saffron)}
+.contact-lhs p{color:var(--muted);font-size:0.92rem;line-height:1.75;margin-bottom:2.5rem}
+.c-detail{display:flex;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--glass-border);font-size:0.88rem;color:var(--muted)}
+.c-detail:last-child{border-bottom:none}
+.c-detail-icon{width:38px;height:38px;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.form-wrap{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(16px);border-radius:16px;padding:2.8rem}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.f-field{display:flex;flex-direction:column;gap:0.45rem;margin-bottom:1rem}
+.f-field label{font-size:0.7rem;letter-spacing:0.12em;font-weight:500;color:var(--muted2);text-transform:uppercase}
+.f-field input,.f-field select,.f-field textarea{background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);color:var(--white);font-family:var(--font-b);font-size:0.88rem;font-weight:300;padding:0.85rem 1.1rem;border-radius:7px;outline:none;width:100%;transition:border-color 0.25s,background 0.25s;appearance:none}
+.f-field input::placeholder,.f-field textarea::placeholder{color:var(--muted2)}
+.f-field input:focus,.f-field select:focus,.f-field textarea:focus{border-color:rgba(255,107,0,0.5);background:rgba(255,107,0,0.04)}
+.f-field select option{background:#0d1524}
+.f-field textarea{resize:vertical;min-height:100px}
+
+/* STATS */
+.stats-strip{position:relative;z-index:2;display:flex;justify-content:center;border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border)}
+.stat-item{flex:1;max-width:280px;padding:3rem 2rem;text-align:center;border-right:1px solid var(--glass-border)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:var(--font-d);font-size:3rem;font-weight:700;color:var(--saffron);line-height:1;letter-spacing:-0.02em}
+.stat-label{font-size:0.75rem;color:var(--muted2);letter-spacing:0.1em;margin-top:0.4rem}
+
+/* FOOTER */
+footer{position:relative;z-index:2;border-top:1px solid var(--glass-border);padding:3.5rem 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;background:rgba(5,8,15,0.6)}
+.footer-logo{font-family:var(--font-d);font-size:1.4rem;font-weight:700}
+.footer-logo em{font-style:italic;color:var(--saffron)}
+.footer-tag{color:var(--muted2);font-size:0.78rem;margin-top:0.3rem;letter-spacing:0.04em}
+.footer-copy{color:var(--muted2);font-size:0.75rem;text-align:right;line-height:1.8}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.in{opacity:1;transform:none}
+.reveal-d1{transition-delay:0.1s}.reveal-d2{transition-delay:0.2s}.reveal-d3{transition-delay:0.3s}.reveal-d4{transition-delay:0.4s}.reveal-d5{transition-delay:0.5s}
+
+/* KEYFRAMES */
+@keyframes riseIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes drip{0%{top:-100%;opacity:1}80%{opacity:1}100%{top:200%;opacity:0}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .offer-grid{grid-template-columns:1fr 1fr}
+  .curr-wrap{grid-template-columns:1fr}
+  .process-wrap{grid-template-columns:1fr 1fr;gap:2.5rem}
+  .process-wrap::before{display:none}
+  .contact-wrap{grid-template-columns:1fr;gap:3.5rem}
+  .f-row{grid-template-columns:1fr}
+  .stats-strip{flex-wrap:wrap}
+  footer{flex-direction:column;text-align:center}
+  .footer-copy{text-align:center}
+}
+@media(max-width:600px){.offer-grid{grid-template-columns:1fr}.process-wrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<canvas id="bg-canvas"></canvas>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">India<em>Elevate</em></a>
+  <ul class="nav-links">
+    <li><a href="#offerings">Offerings</a></li>
+    <li><a href="#curriculum">Curriculum</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact" class="nav-cta">Partner With Us</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-pill"><span class="pill-dot"></span>Empowering Bharat Through Education</div>
+    <h1 class="hero-title">The Future of<br/><span class="line2">Indian Education</span><br/>Starts Here</h1>
+    <p class="hero-sub">Turnkey AI Robotics Labs, hands-on workshops &amp; innovation camps — built for Class 3–10 schools across India.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-p">Partner With Your School &rarr;</a>
+      <a href="#curriculum" class="btn-s">View Curriculum</a>
+    </div>
+  </div>
+  <div class="scroll-ind"><div class="scroll-track"></div><span>Scroll</span></div>
+</section>
+
+<div class="marquee-wrap"><div class="marquee-track" id="mtrack"></div></div>
+
+<div class="stats-strip">
+  <div class="stat-item reveal"><div class="stat-num">3–10</div><div class="stat-label">Classes Covered</div></div>
+  <div class="stat-item reveal reveal-d1"><div class="stat-num">4+</div><div class="stat-label">Projects Per Kit / Year</div></div>
+  <div class="stat-item reveal reveal-d2"><div class="stat-num">AI</div><div class="stat-label">Robotics · Coding · IoT</div></div>
+  <div class="stat-item reveal reveal-d3"><div class="stat-num">B2B</div><div class="stat-label">School Partnership Model</div></div>
+</div>
+
+<section class="section" id="offerings">
+  <div class="reveal"><span class="s-tag">What We Offer</span></div>
+  <h2 class="s-title reveal reveal-d1">Everything Your School Needs to <em>Lead in STEM</em></h2>
+  <p class="s-sub reveal reveal-d2">End-to-end solutions — from lab setup to teacher training — so your school focuses on learning, not logistics.</p>
+  <div class="offer-grid">
+    <div class="o-card reveal"><div class="o-card-glow"></div><span class="o-icon">🤖</span><div class="o-title">AI Robotics Labs</div><p class="o-desc">Fully equipped, turnkey labs installed at your school. Hardware, software, curriculum guides, and tech support — all included.</p></div>
+    <div class="o-card reveal reveal-d1"><div class="o-card-glow"></div><span class="o-icon">🎓</span><div class="o-title">Hands-On Workshops</div><p class="o-desc">Project-based workshops facilitated by trained educators. Students build real robots and write real code — not just watch demos.</p></div>
+    <div class="o-card reveal reveal-d2"><div class="o-card-glow"></div><span class="o-icon">🚀</span><div class="o-title">Innovation Camps</div><p class="o-desc">Intensive 2–5 day camps where students ideate, prototype, and present. Builds entrepreneurial thinking from an early age.</p></div>
+    <div class="o-card reveal reveal-d3"><div class="o-card-glow"></div><span class="o-icon">📦</span><div class="o-title">Student STEM Kits</div><p class="o-desc">Curated kits for every class — Scratch &amp; simple circuits for Class 3–5, Arduino &amp; Python for Class 6–10.</p></div>
+    <div class="o-card reveal reveal-d4"><div class="o-card-glow"></div><span class="o-icon">👩‍🏫</span><div class="o-title">Teacher Training</div><p class="o-desc">We don't just install and leave. Ongoing training ensures your faculty can deliver quality STEM confidently.</p></div>
+    <div class="o-card reveal reveal-d5"><div class="o-card-glow"></div><span class="o-icon">📊</span><div class="o-title">Progress Tracking</div><p class="o-desc">Structured assessments, project showcases, and reports help schools see measurable learning outcomes from day one.</p></div>
+  </div>
+</section>
+
+<section class="section section-alt" id="curriculum">
+  <div class="reveal"><span class="s-tag">Curriculum</span></div>
+  <h2 class="s-title reveal reveal-d1">Structured Learning <em>Class 3 to 10</em></h2>
+  <p class="s-sub reveal reveal-d2">Age-appropriate, hands-on curriculum that grows with each student — from visual coding to real-world AI.</p>
+  <div class="curr-wrap">
+    <div class="curr-card reveal"><div class="curr-card-accent"></div><div class="curr-num">01</div><div class="curr-level">Foundation</div><div class="curr-class">Class 3 – 5</div><div class="curr-tags"><span class="c-tag c-tag-o">Scratch</span><span class="c-tag c-tag-o">Block Coding</span><span class="c-tag c-tag-o">Simple Circuits</span></div><ul class="curr-list"><li>Visual programming with Scratch</li><li>Introduction to basic electronics</li><li>Logic building through games &amp; stories</li><li>4 hands-on projects per year</li></ul></div>
+    <div class="curr-card reveal reveal-d1"><div class="curr-card-accent"></div><div class="curr-num">02</div><div class="curr-level">Intermediate</div><div class="curr-class">Class 6 – 8</div><div class="curr-tags"><span class="c-tag c-tag-o">Arduino</span><span class="c-tag c-tag-g">Python</span><span class="c-tag c-tag-g">Sensors</span></div><ul class="curr-list"><li>Arduino microcontroller projects</li><li>Introduction to Python programming</li><li>Sensor-based robot building</li><li>4 advanced projects per year</li></ul></div>
+    <div class="curr-card reveal reveal-d2"><div class="curr-card-accent"></div><div class="curr-num">03</div><div class="curr-level">Advanced</div><div class="curr-class">Class 9 – 10</div><div class="curr-tags"><span class="c-tag c-tag-g">AI / ML</span><span class="c-tag c-tag-g">Python</span><span class="c-tag c-tag-o">IoT</span></div><ul class="curr-list"><li>AI &amp; Machine Learning fundamentals</li><li>IoT and connected systems</li><li>Real-world problem solving</li><li>4 capstone projects per year</li></ul></div>
+  </div>
+</section>
+
+<section class="section" id="process">
+  <div class="reveal"><span class="s-tag">How It Works</span></div>
+  <h2 class="s-title reveal reveal-d1">Simple Onboarding, <em>Lasting Impact</em></h2>
+  <p class="s-sub reveal reveal-d2">From first conversation to fully running lab — we handle everything.</p>
+  <div class="process-wrap">
+    <div class="p-step reveal"><div class="p-node">01</div><div class="p-title">Discovery Call</div><p class="p-desc">We understand your school's infrastructure, student strength, and goals.</p></div>
+    <div class="p-step reveal reveal-d1"><div class="p-node">02</div><div class="p-title">Custom Proposal</div><p class="p-desc">A tailored lab and curriculum plan matched to your budget and class levels.</p></div>
+    <div class="p-step reveal reveal-d2"><div class="p-node">03</div><div class="p-title">Lab Setup</div><p class="p-desc">Our team installs and configures the complete AI Robotics Lab at your school.</p></div>
+    <div class="p-step reveal reveal-d3"><div class="p-node">04</div><div class="p-title">Training &amp; Launch</div><p class="p-desc">Teachers get trained, kits are delivered, and your program goes live.</p></div>
+    <div class="p-step reveal reveal-d4"><div class="p-node">05</div><div class="p-title">Ongoing Support</div><p class="p-desc">Regular check-ins, updates, and fresh curriculum every academic year.</p></div>
+  </div>
+</section>
+
+<section class="section section-alt" id="contact">
+  <div class="contact-wrap">
+    <div class="contact-lhs reveal">
+      <span class="s-tag">Partner With Us</span>
+      <h3>Let's Bring STEM to <em>Your School</em></h3>
+      <p>Whether you're a principal, trustee, or education coordinator — fill out the form and our team connects with you within 24 hours.</p>
+      <div class="c-detail"><div class="c-detail-icon">📧</div>hello@indiaelevate.co.in</div>
+      <div class="c-detail"><div class="c-detail-icon">🌐</div>indiaelevate.co.in</div>
+      <div class="c-detail"><div class="c-detail-icon">📍</div>West Bengal, India — Serving Schools Nationwide</div>
+    </div>
+    <div class="form-wrap reveal reveal-d1">
+      <div class="f-row">
+        <div class="f-field"><label>Your Name</label><input type="text" placeholder="Rajesh Kumar"/></div>
+        <div class="f-field"><label>Phone</label><input type="tel" placeholder="+91 98765 43210"/></div>
+      </div>
+      <div class="f-field"><label>Email Address</label><input type="email" placeholder="principal@yourschool.edu.in"/></div>
+      <div class="f-field"><label>School Name</label><input type="text" placeholder="St. Mary's High School"/></div>
+      <div class="f-row">
+        <div class="f-field"><label>City / District</label><input type="text" placeholder="Kolkata"/></div>
+        <div class="f-field"><label>Interested In</label><select><option value="">Select...</option><option>AI Robotics Lab</option><option>Workshops</option><option>Innovation Camp</option><option>Student STEM Kits</option><option>Full Program</option></select></div>
+      </div>
+      <div class="f-field"><label>Message (Optional)</label><textarea placeholder="Tell us about your school's current STEM setup..."></textarea></div>
+      <button class="btn-p" style="width:100%;justify-content:center;border:none;font-size:0.9rem">Send Inquiry &rarr;</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><div class="footer-logo">India<em>Elevate</em></div><div class="footer-tag">Empowering Bharat Through Education</div></div>
+  <div class="footer-copy">© 2025 India Elevate · indiaelevate.co.in<br/><span style="font-size:0.7rem;opacity:0.6">Built with purpose in West Bengal 🇮🇳</span></div>
+</footer>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cursor');
+const ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+(function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';ring.style.width='56px';ring.style.height='56px';ring.style.borderColor='rgba(255,107,0,0.25)'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';ring.style.width='36px';ring.style.height='36px';ring.style.borderColor='rgba(255,107,0,0.5)'});
+});
+
+// NAV
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60)});
+
+// CANVAS NEURAL NET
+const canvas=document.getElementById('bg-canvas');
+const ctx=canvas.getContext('2d');
+let W,H,nodes=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',()=>{resize();initNodes()});
+function initNodes(){
+  nodes=[];
+  const count=Math.floor((W*H)/16000);
+  for(let i=0;i<count;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2,r:Math.random()*1.4+0.4,pulse:Math.random()*Math.PI*2});
+}
+initNodes();
+function drawCanvas(){
+  ctx.clearRect(0,0,W,H);
+  // aurora blobs
+  const g1=ctx.createRadialGradient(W*0.2,H*0.3,0,W*0.2,H*0.3,W*0.45);
+  g1.addColorStop(0,'rgba(255,107,0,0.045)');g1.addColorStop(1,'transparent');
+  ctx.fillStyle=g1;ctx.fillRect(0,0,W,H);
+  const g2=ctx.createRadialGradient(W*0.78,H*0.68,0,W*0.78,H*0.68,W*0.38);
+  g2.addColorStop(0,'rgba(0,201,141,0.028)');g2.addColorStop(1,'transparent');
+  ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+  const g3=ctx.createRadialGradient(W*0.5,H*0.5,0,W*0.5,H*0.5,W*0.3);
+  g3.addColorStop(0,'rgba(255,107,0,0.02)');g3.addColorStop(1,'transparent');
+  ctx.fillStyle=g3;ctx.fillRect(0,0,W,H);
+
+  nodes.forEach((n,i)=>{
+    n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;
+    n.pulse+=0.014;
+    for(let j=i+1;j<nodes.length;j++){
+      const m=nodes[j],dx=n.x-m.x,dy=n.y-m.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<150){
+        ctx.beginPath();
+        ctx.strokeStyle=`rgba(255,107,0,${(1-d/150)*0.16})`;
+        ctx.lineWidth=0.5;ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.stroke();
+      }
+    }
+    const p=0.5+0.5*Math.sin(n.pulse);
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r*(0.8+0.4*p),0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,107,0,${0.22+0.22*p})`;ctx.fill();
+  });
+  requestAnimationFrame(drawCanvas);
+}
+drawCanvas();
+
+// MARQUEE
+const items=['AI Robotics Labs','Scratch Programming','Arduino Projects','Python for Students','Innovation Camps','STEM Kits','Teacher Training','Class 3–10 Curriculum','IoT & Sensors'];
+const track=document.getElementById('mtrack');
+[...items,...items].forEach(t=>{const d=document.createElement('div');d.className='marquee-item';d.innerHTML=`${t}<span class="sep">✦</span>`;track.appendChild(d)});
+
+// SCROLL REVEAL
+const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+</script>
+</body>
+</html>
